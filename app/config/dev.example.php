@@ -1,7 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Yoann
- * Date: 15/01/2016
- * Time: 17:42
- */
+
+// include the prod configuration
+require __DIR__ . '/prod.example.php';
+// enable the debug mode
+$app['debug'] = true;
