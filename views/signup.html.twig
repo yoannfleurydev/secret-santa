@@ -1,0 +1,23 @@
+{% extends "template.html.twig" %}
+
+{% block content %}
+    <div class="panel panel-default">
+        <div class="panel panel-heading">Inscription</div>
+        <div class="panel panel-body">
+            <form method="post" action="/signup">
+                <div class="form-group">
+                    <label for="user_email">Adresse E-Mail</label>
+                    <input type="email" class="form-control" id="user_email" placeholder="Adresse E-Mail"
+                           name="user_email">
+                </div>
+                <div class="form-group">
+                    <label for="user_password">Mot de passe</label>
+                    <input type="password" class="form-control" id="user_password" placeholder="Mot de passe"
+                           name="user_password">
+                </div>
+                <button type="submit" class="btn btn-primary">Envoyer</button>
+                <button type="reset" class="btn btn-default">Annuler</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
