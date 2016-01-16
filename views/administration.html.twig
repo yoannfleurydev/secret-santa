@@ -1,0 +1,76 @@
+{% extends "template.html.twig" %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Utilisateurs</h3>
+                </div>
+                <table class="table table-hover table-striped">
+                    <tr>
+                        <th>#</th>
+                        <th>Prénom</th>
+                        <th>Nom</th>
+                        <th>Nom d'utilisateur</th>
+                        <th>Modifier</th>
+                        <th>Supprimer</th>
+                    </tr>
+                    {% for user in users %}
+                        <tr>
+                            <td>{{ user.getUserId }}</td>
+                            <td>{{ user.getUserFirstname }}</td>
+                            <td>{{ user.getUserLastname }}</td>
+                            <td>{{ user.getUserLogin }}</td>
+                            <td>
+                                <a href="{#{ path('edituser', {id: user.userId}) }#}" class="btn btn-primary btn-block"
+                                   title="Modifier l'utilisateur" role="button">
+                                    <span class="glyphicon glyphicon-edit"></span>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="{#{ path('deleteuser', {id: user.userId}) }#}" class="btn btn-danger btn-block"
+                                   title="Supprimer l'utilisateur" role="button">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Instances Secret Santa</h3>
+                </div>
+                <table class="table table-hover table-striped">
+                    <tr>
+                        <th>#</th>
+                        <th>Année</th>
+                        <th>Nom</th>
+                        <th>Hash</th>
+                    </tr>
+                    {% for instance in instances %}
+                        <tr>
+                            <td>{{ instance.getInstanceId }}</td>
+                            <td>{{ instance.getInstanceYear }}</td>
+                            <td>{{ instance.getInstanceName }}</td>
+                            <td>{{ instance.getInstanceHash }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+                <div class="panel-body">
+                    <form method="post" action="{{ path('administration_new_instance_post') }}">
+                        <div class="form-group">
+                            <label for="instance_name">Création d'instance</label>
+                            <input type="text" class="form-control" id="instance_name" placeholder="Nom de l'instance"
+                                   name="instance_name">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Créer une nouvelle instance</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

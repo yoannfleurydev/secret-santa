@@ -73,5 +73,18 @@ $app->post('/login', function (Request $request) use ($app) {
     }
 })->bind('login_post');
 
+$app->post('/administration/new/instance', function(Request $request) use ($app) {
+    $instance_name = $request->request->get('instance_name');
 
+    $instance_hash = hash('md5', $instance_name);
 
+    // TODO enregistrer dans la base de données
+
+    $app['session']->getFlashBag()->add('message',
+        array(
+            'type' => 'success',
+            'content' => 'Votre instance ' . $instance_name . ' ' . $instance_hash . ' a bien été créée'
+        )
+    );
+    return $app->redirect($app['url_generator']->generate('index'));
+})->bind('administration_new_instance_post');

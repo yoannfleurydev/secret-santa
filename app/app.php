@@ -8,3 +8,7 @@ $app->register(new Silex\Provider\SessionServiceProvider());
 $app['dao.user'] = $app->share(function ($app) {
     return new SecretSanta\DAO\UserDAO($app['db']);
 });
+
+$app['dao.instance'] = $app->share(function ($app) {
+    return new SecretSanta\DAO\InstanceDAO($app['db']);
+});

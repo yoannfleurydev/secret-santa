@@ -37,11 +37,6 @@ $app->get('/user/{id}', function ($id) use ($app) {
     return $app['twig']->render('user.html.twig', array('user' => $user));
 })->bind('user')->assert('id', '\d+');
 
-
-
-
-
-
 $app->get('/logout', function () use ($app) {
     $app['session']->clear();
 
@@ -54,3 +49,38 @@ $app->get('/logout', function () use ($app) {
 
     return $app->redirect($app['url_generator']->generate('index'));
 })->bind('logout');
+
+$app->get('/administration', function () use ($app) {
+    if (null === $user = $app['session']->get('user')) {
+        $app['session']->getFlashBag()->add(
+            'message',
+            array(
+                'type' => 'danger',
+                'content' => 'Vous n\'avez pas les droits d\'accès suffisant pour accéder à cette partie'
+            )
+        );
+        return $app->redirect($app['url_generator']->generate('login_get'));
+    }
+
+    if ($user->getUserAccess() !== 'ADMIN') {
+        $app['session']->getFlashBag()->add(
+            'message',
+            array(
+                'type' => 'danger',
+                'content' => 'Vous n\'avez pas les droits d\'accès suffisant pour accéder à cette partie'
+            )
+        );
+        return $app->redirect($app['url_generator']->generate('login_get'));
+    }
+
+    $users = $app['dao.user']->findAll();
+    $instances = $app['dao.instance']->findAll();
+
+    return $app['twig']->render(
+        'administration.html.twig',
+        array(
+            'users' => $users,
+            'instances'=> $instances
+        )
+    );
+})->bind('administration');
