@@ -31,25 +31,16 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 {% if app.session.get("connected") %}
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                       aria-expanded="false">
-                        {{ app.session.get("user").userFirstname }}
-                        <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a href="{{ path('user', {'id': app.session.get("user").userId}) }}"
-                               title="Accéder à mon profil">
-                                Mon profil</a>
-                        </li>
-                        <li>
-                            <a href="{{ path('logout') }}" title="Se déconnecter">Déconnexion</a>
-                        </li>
-                    </ul>
-                </li>
+                    <li>
+                        <a href="{{ path('user', {'id': app.session.get("user").userId}) }}"
+                           title="Accéder à mon profil">
+                            {{ app.session.get('user').userLogin }}
+                        </a>
+                    </li>
+                    <li><a href="{{ path('logout') }}" title="Se déconnecter">Déconnexion</a></li>
                 {% else %}
-                <li><a href="{{ path('login_get') }}" title="Connexion">Connexion</a></li>
-                <li><a href="{{ path('signup_get') }}" title="Inscription">Inscription</a></li>
+                    <li><a href="{{ path('login_get') }}" title="Connexion">Connexion</a></li>
+                    <li><a href="{{ path('signup_get') }}" title="Inscription">Inscription</a></li>
                 {% endif %}
             </ul>
         </div><!-- /.navbar-collapse -->
@@ -58,7 +49,7 @@
 <div class="container">
     {% for message in app.session.getFlashBag.get('message') %}
         <div class="row message">
-            <div class="col-lg-offset-2 col-lg-8 col-md-offset-2 col-md-8 col-sm-8 col-xs-12">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="alert alert-{{ message.type }}" role="alert">
                     <span class="sr-only">Error:</span>
                     {{ message.content }}
@@ -73,7 +64,7 @@
 <footer class="footer">
     <div class="container">
         <p>
-            Développé par :  <a href="http://yoannfleury.eu">Yoann FLEURY</a>
+            Développé par : <a href="http://yoannfleury.eu">Yoann FLEURY</a>
         </p>
     </div>
 </footer>

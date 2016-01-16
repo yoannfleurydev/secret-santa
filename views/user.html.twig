@@ -1,5 +1,9 @@
 {% extends "template.html.twig" %}
 
 {% block content %}
-    <div>{{ user.getUserId }}</div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{ user.getUserFirstname }} {{ user.getUserLastname | upper }}</h3>
+        </div>
+    </div>
 {% endblock %}
