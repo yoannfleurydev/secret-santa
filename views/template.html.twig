@@ -30,8 +30,27 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
+                {% if app.session.get("connected") %}
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">
+                        {{ app.session.get("user").userFirstname }}
+                        <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="{#{ path('user', {'id': app.session.get("user").userId}) }#}"
+                               title="Accéder à mon profil">
+                                Mon profil</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('logout') }}" title="Se déconnecter">Déconnexion</a>
+                        </li>
+                    </ul>
+                </li>
+                {% else %}
                 <li><a href="{{ path('login_get') }}" title="Connexion">Connexion</a></li>
                 <li><a href="{{ path('signup_get') }}" title="Inscription">Inscription</a></li>
+                {% endif %}
             </ul>
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
