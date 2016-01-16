@@ -1,3 +1,5 @@
-/**
- * Created by Yoann on 16/01/2016.
- */
+$(document).ready(function () {
+    $(".message").click(function () {
+        $(this).fadeOut()
+    });
+});
