@@ -6,6 +6,8 @@ namespace SecretSanta\DAO;
 use SecretSanta\POPO\User;
 
 class UserDAO extends DAO {
+    private $COST = 11;
+
     public function find($id) {
         $sql = "SELECT * FROM santa_user WHERE user_id=?";
         $row = $this->getDb()->fetchAssoc($sql, array($id));
@@ -24,18 +26,49 @@ class UserDAO extends DAO {
         return $users;
     }
 
-    public function setUser($username, $password) {
-        $login = htmlspecialchars($username);
-        $options = array('cost' => 11);
-        $pass = password_hash($password, PASSWORD_BCRYPT, $options);
-        $userData = array('user_login' => $login, 'user_password' => $pass, // TODO en dur dans le code, mais peut être serait-il intéressant de faire une requête sur la base de
-            // données pour avoir par défaut l'id qui correspond à un USER.
-            'user_access_id' => 2);
-        $this->getDb()->insert("mq_user", $userData);
+    public function findByUserLogin($user_login) {
+        $sql = "SELECT * FROM santa_user WHERE user_login=?";
+        $row = $this->getDb()->fetchAssoc($sql, array($user_login));
+        if ($row) return $this->buildDomainObject($row); else
+            throw new \Exception('User ' . $user_login . ' not found.');
     }
+
+    public function setUser($user_login, $user_password, $user_firstname, $user_lastname,
+                            $user_email, $user_access = "USER") {
+        $login = htmlspecialchars($user_login);
+        $email = htmlspecialchars($user_email);
+        $firstname = htmlspecialchars($user_firstname);
+        $lastname = htmlspecialchars($user_lastname);
+
+        $pass = password_hash($user_password, PASSWORD_BCRYPT, array('cost' => $this->COST));
+        $userData = array(
+            'user_login' => $login,
+            'user_password' => $pass,
+            'user_firstname' => $firstname,
+            'user_lastname' => $lastname,
+            'user_email' => $email,
+            'user_access' => $user_access
+        );
+        $this->getDb()->insert("santa_user", $userData);
+    }
+
     public function updatePassword($user_password, $user_id) {
-        $pass = password_hash($user_password, PASSWORD_BCRYPT, array('cost' => 11));
-        $this->getDb()->update("mq_user", array('user_password' => $pass), array('user_id' => $user_id));
+        $pass = password_hash($user_password, PASSWORD_BCRYPT, array('cost' => $this->COST));
+        $this->getDb()->update("santa_user", array('user_password' => $pass), array('user_id' => $user_id));
+    }
+
+    public function userLoginExist($user_login) {
+        $login = htmlspecialchars($user_login);
+        $sql = "SELECT * FROM santa_user WHERE user_login=?";
+        $row = $this->getDb()->fetchAssoc($sql, array($login));
+
+        return !($row == null);
+    }
+
+    public function verifyLogin($user_login, $password) {
+        $sql = "SELECT * FROM santa_user WHERE user_login=?";
+        $row = $this->getDb()->fetchAssoc($sql, array(htmlspecialchars($user_login)));
+        return password_verify($password, $row['user_password']);
     }
 
     protected function buildDomainObject($row) {
