@@ -23,6 +23,19 @@ class InstanceDAO extends DAO {
         return $instances;
     }
 
+    public function setInstance($instance_name, $instance_hash) {
+        $instance_name = htmlspecialchars($instance_name);
+        $instance_hash = htmlspecialchars($instance_hash);
+        $instance_year = date('Y');
+
+        $instanceData = array(
+            'instance_year' => $instance_year,
+            'instance_name' => $instance_name,
+            'instance_hash' => $instance_hash
+        );
+        $this->getDb()->insert("santa_instance", $instanceData);
+    }
+
     protected function buildDomainObject($row) {
         $user = new User();
 

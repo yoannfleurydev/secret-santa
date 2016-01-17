@@ -75,10 +75,9 @@ $app->post('/login', function (Request $request) use ($app) {
 
 $app->post('/administration/new/instance', function(Request $request) use ($app) {
     $instance_name = $request->request->get('instance_name');
-
     $instance_hash = hash('md5', $instance_name);
 
-    // TODO enregistrer dans la base de données
+    $app['dao.instance']->setInstance($instance_name, $instance_hash);
 
     $app['session']->getFlashBag()->add('message',
         array(
