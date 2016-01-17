@@ -8,6 +8,21 @@ class Instance {
     private $instance_year;
     private $instance_name;
     private $instance_hash;
+    private $instance_author_id;
+
+    /**
+     * @return mixed
+     */
+    public function getInstanceAuthorId() {
+        return $this->instance_author_id;
+    }
+
+    /**
+     * @param mixed $instance_author_id
+     */
+    public function setInstanceAuthorId($instance_author_id) {
+        $this->instance_author_id = $instance_author_id;
+    }
 
     /**
      * @return mixed

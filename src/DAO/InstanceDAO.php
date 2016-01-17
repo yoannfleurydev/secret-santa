@@ -3,6 +3,8 @@
 namespace SecretSanta\DAO;
 
 
+use SecretSanta\POPO\Instance;
+
 class InstanceDAO extends DAO {
 
     public function find($id) {
@@ -23,7 +25,7 @@ class InstanceDAO extends DAO {
         return $instances;
     }
 
-    public function setInstance($instance_name, $instance_hash) {
+    public function setInstance($instance_name, $instance_hash, $instance_author_id) {
         $instance_name = htmlspecialchars($instance_name);
         $instance_hash = htmlspecialchars($instance_hash);
         $instance_year = date('Y');
@@ -31,22 +33,22 @@ class InstanceDAO extends DAO {
         $instanceData = array(
             'instance_year' => $instance_year,
             'instance_name' => $instance_name,
-            'instance_hash' => $instance_hash
+            'instance_hash' => $instance_hash,
+            'instance_author_id' => $instance_author_id
         );
         $this->getDb()->insert("santa_instance", $instanceData);
     }
 
     protected function buildDomainObject($row) {
-        $user = new User();
+        $instance = new Instance();
 
-        $user->setUserId($row['user_id']);
-        $user->setUserLogin($row['user_login']);
-        $user->setUserPassword($row['user_password']);
-        $user->setUserFirstname($row['user_firstname']);
-        $user->setUserLastname($row['user_lastname']);
-        $user->setUserEmail($row['user_email']);
-        $user->setUserAccess($row['user_access']);
+        $instance->setInstanceId($row['instance_id']);
+        $instance->setInstanceYear($row['instance_year']);
+        $instance->setInstanceName($row['instance_name']);
+        $instance->setInstanceHash($row['instance_hash']);
+        $instance->setInstanceAuthorId($row['instance_author_id']);
 
-        return $user;
+
+        return $instance;
     }
 }
