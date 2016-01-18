@@ -32,16 +32,25 @@
                 {% if app.session.get("connected") %}
                     {% if app.session.get('user').userAccess == "ADMIN" %}
                         <li>
-                            <a href="{{ path('administration') }}" title="Administration">Administration</a>
+                            <a href="{{ path('administration') }}" title="Administration">
+                                <span class="glyphicon glyphicon-cog"></span>
+                                Administration
+                            </a>
                         </li>
                     {% endif %}
                     <li>
                         <a href="{{ path('user', {'id': app.session.get("user").userId}) }}"
-                           title="Accéder à mon profil">
-                            {{ app.session.get('user').userLogin }}
+                           title="Mon profil">
+                            <span class="glyphicon glyphicon-user"></span>
+                            Profil
                         </a>
                     </li>
-                    <li><a href="{{ path('logout') }}" title="Se déconnecter">Déconnexion</a></li>
+                    <li>
+                        <a href="{{ path('logout') }}" title="Se déconnecter">
+                            <span class="glyphicon glyphicon-log-out"></span>
+                            Déconnexion
+                        </a>
+                    </li>
                 {% else %}
                     <li><a href="{{ path('login_get') }}" title="Connexion">Connexion</a></li>
                     <li><a href="{{ path('signup_get') }}" title="Inscription">Inscription</a></li>
