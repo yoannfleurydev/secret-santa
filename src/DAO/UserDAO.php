@@ -52,6 +52,10 @@ class UserDAO extends DAO {
         $this->getDb()->insert("santa_user", $userData);
     }
 
+    public function deleteUser($user_id) {
+        $this->getDb()->delete('santa_user', array('user_id' => $user_id));
+    }
+
     public function updatePassword($user_password, $user_id) {
         $pass = password_hash($user_password, PASSWORD_BCRYPT, array('cost' => $this->COST));
         $this->getDb()->update("santa_user", array('user_password' => $pass), array('user_id' => $user_id));

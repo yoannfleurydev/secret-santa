@@ -50,6 +50,43 @@ $app->get('/logout', function () use ($app) {
     return $app->redirect($app['url_generator']->generate('index'));
 })->bind('logout');
 
+$app->get('/administration/delete/user/{id}', function($id) use ($app) {
+    if (null === $user = $app['session']->get('user')) {
+        $app['session']->getFlashBag()->add(
+            'message',
+            array(
+                'type' => 'danger',
+                'content' => 'Vous n\'avez pas les droits d\'accès suffisant pour accéder à cette partie'
+            )
+        );
+        return $app->redirect($app['url_generator']->generate('login_get'));
+    }
+
+    if ($user->getUserAccess() !== 'ADMIN') {
+        $app['session']->getFlashBag()->add(
+            'message',
+            array(
+                'type' => 'danger',
+                'content' => 'Vous n\'avez pas les droits d\'accès suffisant pour accéder à cette partie'
+            )
+        );
+        return $app->redirect($app['url_generator']->generate('login_get'));
+    }
+
+    if ($app['session']->get('user')->getUserId() === $id) { $app['session']->clear(); }
+    $app['dao.user']->deleteUser($id);
+
+    $app['session']->getFlashBag()->add(
+        'message',
+        array(
+            'type' => 'success',
+            'content' => 'L\'utilisateur ' . $id . ' a bien été supprimé'
+        )
+    );
+
+    return $app->redirect($app['url_generator']->generate('index'));
+})->bind('delete_user')->assert('id', '\d+');
+
 $app->get('/administration', function () use ($app) {
     if (null === $user = $app['session']->get('user')) {
         $app['session']->getFlashBag()->add(
