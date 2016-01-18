@@ -29,13 +29,12 @@
                                 </a>
                             </td>
                             <td>
-                                <a href="{#{ path('delete_user', {id: user.userId}) }#}"
-                                   class="btn btn-danger btn-block" title="Supprimer l'utilisateur"
+                                <button class="btn btn-danger btn-block" title="Supprimer l'utilisateur"
                                    data-toggle="modal" data-target="#modal-confirmation"
                                    data-user_login="{{ user.getUserLogin }}"
                                    data-delete_user_path="{{ path('delete_user', {id: user.userId}) }}">
                                     <span class="glyphicon glyphicon-trash"></span>
-                                </a>
+                                </button>
                             </td>
                         </tr>
                     {% endfor %}
