@@ -12,3 +12,7 @@ $app['dao.user'] = $app->share(function ($app) {
 $app['dao.instance'] = $app->share(function ($app) {
     return new SecretSanta\DAO\InstanceDAO($app['db']);
 });
+
+$app['dao.participation'] = $app->share(function ($app) {
+    return new SecretSanta\DAO\ParticipationDAO($app['db']);
+});
