@@ -25,11 +25,7 @@ class InstanceDAO extends DAO {
         return $instances;
     }
 
-    public function setInstance($instance_name, $instance_hash, $instance_author_id) {
-        $instance_name = htmlspecialchars($instance_name);
-        $instance_hash = htmlspecialchars($instance_hash);
-        $instance_year = date('Y');
-
+    public function setInstance($instance_year, $instance_name, $instance_hash, $instance_author_id) {
         $instanceData = array(
             'instance_year' => $instance_year,
             'instance_name' => $instance_name,
@@ -37,6 +33,14 @@ class InstanceDAO extends DAO {
             'instance_author_id' => $instance_author_id
         );
         $this->getDb()->insert("santa_instance", $instanceData);
+    }
+
+    public function instanceNameExist($instance_name) {
+        $name = htmlspecialchars($instance_name);
+        $sql = "SELECT * FROM santa_instance WHERE instance_name=?";
+        $row = $this->getDb()->fetchAssoc($sql, array($name));
+
+        return !($row == null);
     }
 
     protected function buildDomainObject($row) {

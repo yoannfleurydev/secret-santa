@@ -49,8 +49,6 @@ $app->post('/signup', function (Request $request) use ($app) {
 })->bind('signup_post');
 
 $app->post('/login', function (Request $request) use ($app) {
-
-
     if ($app['dao.user']->verifyLogin($request->request->get('user_login'), $request->request->get('user_password'))) {
         $user = $app['dao.user']->findByUserLogin($request->request->get('user_login'));
         $app['session']->set('user', $user);
@@ -74,11 +72,46 @@ $app->post('/login', function (Request $request) use ($app) {
 })->bind('login_post');
 
 $app->post('/administration/new/instance', function(Request $request) use ($app) {
-    $instance_name = $request->request->get('instance_name');
-    $instance_hash = hash('md5', $instance_name);
+    if (null === $user = $app['session']->get('user')) {
+        $app['session']->getFlashBag()->add(
+            'message',
+            array(
+                'type' => 'danger',
+                'content' => 'Vous n\'avez pas les droits d\'accès suffisant pour accéder à cette partie'
+            )
+        );
+        return $app->redirect($app['url_generator']->generate('login_get'));
+    }
 
-    $app['dao.instance']->setInstance($instance_name, $instance_hash);
+    if ($user->getUserAccess() !== 'ADMIN') {
+        $app['session']->getFlashBag()->add(
+            'message',
+            array(
+                'type' => 'danger',
+                'content' => 'Vous n\'avez pas les droits d\'accès suffisant pour accéder à cette partie'
+            )
+        );
+        return $app->redirect($app['url_generator']->generate('login_get'));
+    }
 
+    $instance_year = date('Y');
+    $instance_name = htmlspecialchars($request->request->get('instance_name'));
+
+    if ($app['dao.instance']->instanceNameExist($instance_name)) {
+        $app['session']->getFlashBag()->add(
+            'message',
+            array(
+                'type' => 'danger',
+                'content' => 'Une instance de ce nom existe déjà'
+            )
+        );
+        return $app->redirect($app['url_generator']->generate('administration'));
+    }
+
+    $instance_hash = hash('md5', $instance_year . htmlspecialchars($instance_name));
+    $instance_author = $app['session']->get('user')->getUserId();
+
+    $app['dao.instance']->setInstance($instance_year, $instance_name, $instance_hash, $instance_author);
     $app['session']->getFlashBag()->add('message',
         array(
             'type' => 'success',
