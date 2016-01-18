@@ -9,7 +9,7 @@
             <p>Prénom : {{ user.getUserFirstname }}</p>
             <p>Nom : {{ user.getUserLastname | upper }}</p>
             <p>Identifiant de connexion : {{ user.getUserLogin }}</p>
-            <p>Email : <{{ user.getUserEmail }}</p>
+            <p>Email : {{ user.getUserEmail }}</p>
         </div>
     </div>
 {% endblock %}
