@@ -7,11 +7,18 @@ use SecretSanta\POPO\Instance;
 
 class InstanceDAO extends DAO {
 
-    public function find($id) {
+    public function find($instance_id) {
         $sql = "SELECT * FROM santa_instance WHERE instance_id=?";
-        $row = $this->getDb()->fetchAssoc($sql, array($id));
+        $row = $this->getDb()->fetchAssoc($sql, array($instance_id));
         if ($row) return $this->buildDomainObject($row); else
-            throw new \Exception("Instance : No santa_instance matching id " . $id);
+            throw new \Exception("Instance : No santa_instance matching id " . $instance_id);
+    }
+
+    public function findInstanceHash($instance_hash) {
+        $sql = "SELECT * FROM santa_instance WHERE instance_hash=?";
+        $row = $this->getDb()->fetchAssoc($sql, array($instance_hash));
+        if ($row) return $this->buildDomainObject($row); else
+            throw new \Exception("Instance : No santa_instance matching instance_hash " . $instance_hash);
     }
 
     public function findAll() {

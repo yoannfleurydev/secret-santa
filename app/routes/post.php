@@ -120,3 +120,43 @@ $app->post('/administration/new/instance', function(Request $request) use ($app)
     );
     return $app->redirect($app['url_generator']->generate('index'));
 })->bind('administration_new_instance_post');
+
+$app->post('/join/instance', function(Request $request) use ($app) {
+    if (null === $user = $app['session']->get('user')) {
+        $app['session']->getFlashBag()->add(
+            'message',
+            array(
+                'type' => 'danger',
+                'content' => 'Vous n\'avez pas les droits d\'accès suffisant pour accéder à cette partie'
+            )
+        );
+        return $app->redirect($app['url_generator']->generate('login_get'));
+    }
+
+    $instance_hash = $request->get('instance_hash');
+    $instance = $app['dao.instance']->findInstanceHash($instance_hash);
+    $instance_id = $instance->getInstanceId();
+    $user_id = $user->getUserId();
+
+    if ($app['dao.participation']->participationExist($instance_id, $user_id)) {
+        $app['session']->getFlashBag()->add(
+            'message',
+            array(
+                'type' => 'warning',
+                'content' => 'Vous avez déjà rejoins cette instance.'
+            )
+        );
+        return $app->redirect($app['url_generator']->generate('index'));
+    }
+
+    $app['dao.participation']->setParticipation($instance_id, $user_id);
+
+    $app['session']->getFlashBag()->add(
+        'message',
+        array(
+            'type' => 'success',
+            'content' => 'Vous avez bien rejoins l\'instance ' . $instance->getInstanceName()
+        )
+    );
+    return $app->redirect($app['url_generator']->generate('index'));
+})->bind('join_instance');
