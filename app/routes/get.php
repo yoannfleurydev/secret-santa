@@ -16,7 +16,7 @@ $app->get('/login', function () use ($app) {
 })->bind('login_get');
 
 $app->get('/user/{id}', function ($id) use ($app) {
-    if (null === $app['session']->get('user')) {
+    if (null === $user = $app['session']->get('user')) {
         $app['session']->getFlashBag()->add(
             'message',
             array(
@@ -29,12 +29,19 @@ $app->get('/user/{id}', function ($id) use ($app) {
 
     if ($app['session']->get('user')->getUserId() !== $id) {
         $app['session']->getFlashBag()->add('message', array('type' => 'danger', 'content' => 'Cette opération ne vous est pas permise'));
-        return $app->redirect('/login');
+        return $app->redirect($app['url_generator']->generate('login_get'));
     }
 
-    $user = $app['dao.user']->find($id);
+    $participations = $app['dao.participation']->findParticipationsUserId($user->getUserId());
+    $instances = $app['dao.instance']->findAll();
 
-    return $app['twig']->render('user.html.twig', array('user' => $user));
+    return $app['twig']->render('user.html.twig',
+        array(
+            'user' => $user,
+            'participations' => $participations,
+            'instances' => $instances
+        )
+    );
 })->bind('user')->assert('id', '\d+');
 
 $app->get('/logout', function () use ($app) {
@@ -49,6 +56,32 @@ $app->get('/logout', function () use ($app) {
 
     return $app->redirect($app['url_generator']->generate('index'));
 })->bind('logout');
+
+$app->get('/instance/join/{user_id}/{participation_id}/{participation_result}',
+    function($user_id, $participation_id, $participation_result) use ($app) {
+        if (null === $user = $app['session']->get('user')) {
+            $app['session']->getFlashBag()->add(
+                'message',
+                array(
+                    'type' => 'danger',
+                    'content' => 'Vous n\'avez pas les droits d\'accès suffisant pour accéder à cette partie'
+                )
+            );
+            return $app->redirect($app['url_generator']->generate('login_get'));
+        }
+
+        if ($app['session']->get('user')->getUserId() !== $user_id) {
+            $app['session']->getFlashBag()->add('message', array('type' => 'danger', 'content' => 'Cette opération ne vous est pas permise'));
+            return $app->redirect($app['url_generator']->generate('login_get'));
+        }
+
+        $app['dao.participation']->updateParticipationResult($participation_id, $participation_result);
+
+        return $app->redirect($app['url_generator']->generate('user', array('id' => $user_id)));
+})->bind('instance_join_userId_participationId_participationResult')
+    ->assert('user_id', '\d+')
+    ->assert('participation_id', '\d+')
+    ->assert('participation_result','[0|1]');
 
 $app->get('/administration/delete/user/{id}', function($id) use ($app) {
     if (null === $user = $app['session']->get('user')) {

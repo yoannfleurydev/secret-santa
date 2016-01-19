@@ -14,7 +14,7 @@
         </div>
     </div>
     {% if app.session.get("connected") %}
-        <form class="form-inline" method="post" action="{{ path('join_instance') }}">
+        <form class="form-inline" method="post" action="{{ path('instance_join') }}">
             <div class="form-group">
                 <label for="instance_hash"></label>
                 <input type="text"  name="instance_hash" id="instance_hash" class="form-control"

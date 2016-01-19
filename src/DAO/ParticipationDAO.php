@@ -21,6 +21,26 @@ class ParticipationDAO extends DAO {
                 $participation_instance_id);
     }
 
+    public function findParticipationsUserId($participation_user_id) {
+        $allParticipations = $this->findAll();
+
+        $participations = array();
+        foreach($allParticipations as $participation) {
+            if ($participation->getParticipationUserId() === $participation_user_id) {
+                $participations[$participation->getParticipationId()] = $participation;
+            }
+        }
+
+        return $participations;
+    }
+
+    public function countParticipationUserId($participation_user_id) {
+        $sql = "SELECT COUNT(*) FROM santa_participation WHERE participation_user_id=?";
+        $count = $this->getDb()->fetchAssoc($sql, array($participation_user_id));
+
+        return $count['COUNT(*)'];
+    }
+
     public function findAll() {
         $sql = "SELECT * FROM santa_participation";
         $rows = $this->getDb()->fetchAll($sql);
@@ -39,6 +59,13 @@ class ParticipationDAO extends DAO {
             'participation_result' => $participation_result
         );
         $this->getDb()->insert("santa_participation", $participation_data);
+    }
+
+    public function updateParticipationResult($participation_id, $participation_result) {
+        $this->getDb()->update("santa_participation",
+            array('participation_result' => $participation_result),
+            array('participation_id' => $participation_id)
+        );
     }
 
     public function participationExist($participation_instance_id, $participation_user_id) {

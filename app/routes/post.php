@@ -36,6 +36,8 @@ $app->post('/signup', function (Request $request) use ($app) {
 
     $user = $app['dao.user']->findByUserLogin($request->request->get('user_login'));
 
+    $app['session']->clear();
+
     $app['session']->set('user', $user);
     $app['session']->set('connected', array('connected' => true));
     $app['session']->getFlashBag()->add('message',
@@ -49,6 +51,7 @@ $app->post('/signup', function (Request $request) use ($app) {
 })->bind('signup_post');
 
 $app->post('/login', function (Request $request) use ($app) {
+    $app['session']->clear();
     if ($app['dao.user']->verifyLogin($request->request->get('user_login'), $request->request->get('user_password'))) {
         $user = $app['dao.user']->findByUserLogin($request->request->get('user_login'));
         $app['session']->set('user', $user);
@@ -121,7 +124,7 @@ $app->post('/administration/new/instance', function(Request $request) use ($app)
     return $app->redirect($app['url_generator']->generate('index'));
 })->bind('administration_new_instance_post');
 
-$app->post('/join/instance', function(Request $request) use ($app) {
+$app->post('/instance/join', function(Request $request) use ($app) {
     if (null === $user = $app['session']->get('user')) {
         $app['session']->getFlashBag()->add(
             'message',
@@ -159,4 +162,4 @@ $app->post('/join/instance', function(Request $request) use ($app) {
         )
     );
     return $app->redirect($app['url_generator']->generate('index'));
-})->bind('join_instance');
+})->bind('instance_join');
