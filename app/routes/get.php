@@ -120,6 +120,68 @@ $app->get('/administration/delete/user/{id}', function($id) use ($app) {
     return $app->redirect($app['url_generator']->generate('index'));
 })->bind('delete_user')->assert('id', '\d+');
 
+$app->get('/instance/run/{instance_id}', function ($instance_id) use ($app) {
+    if (null === $user = $app['session']->get('user')) {
+        $app['session']->getFlashBag()->add(
+            'message',
+            array(
+                'type' => 'danger',
+                'content' => 'Vous n\'avez pas les droits d\'accès suffisant pour accéder à cette partie'
+            )
+        );
+        return $app->redirect($app['url_generator']->generate('login_get'));
+    }
+
+    if ($user->getUserAccess() !== 'ADMIN') {
+        $app['session']->getFlashBag()->add(
+            'message',
+            array(
+                'type' => 'danger',
+                'content' => 'Vous n\'avez pas les droits d\'accès suffisant pour accéder à cette partie'
+            )
+        );
+        return $app->redirect($app['url_generator']->generate('login_get'));
+    }
+
+    // TODO test si le tirage a déjà était fait, en gros si l'identifiant de l'instance existe
+
+    $participations = $app['dao.participation']->findAll();
+
+    $participationsInstance = array();
+    foreach($participations as $participation) {
+        if ($participation->getParticipationInstanceId() == $instance_id) {
+            $participationsInstance[] = $participation;
+        }
+    }
+
+    $participationsInstanceCopy = array();
+    foreach($participationsInstance as $participation) {
+        $participationsInstanceCopy[] = $participation;
+    }
+
+    // Loop to shuffle the second array.
+    do {
+        $arraysAreDifferent = true;
+        shuffle($participationsInstanceCopy);
+        for ($i = 0; $i < count($participationsInstance); $i++) {
+            if ($participationsInstance[$i]->getParticipationUserId() ===
+                $participationsInstanceCopy[$i]->getParticipationUserId()) {
+                $arraysAreDifferent = false;
+            }
+        }
+    } while(!$arraysAreDifferent);
+
+    for ($i = 0; $i < count($participationsInstance); $i++) {
+        $app['dao.result']->setResult(
+            $instance_id,
+            $participationsInstance[$i]->getParticipationUserId(),
+            $participationsInstanceCopy[$i]->getParticipationUserId()
+        );
+    }
+
+    return $app->redirect($app['url_generator']->generate('administration'));
+})->bind('instance_run')->assert('instance_id', '\d+');
+
 $app->get('/administration', function () use ($app) {
     if (null === $user = $app['session']->get('user')) {
         $app['session']->getFlashBag()->add(
@@ -154,3 +216,19 @@ $app->get('/administration', function () use ($app) {
         )
     );
 })->bind('administration');
+
+/**
+ * Function tu shuffle an array with the key => value
+ * @param $array
+ * @return bool
+ */
+function shuffle_assoc(&$array) {
+    $keys = array_keys($array);
+    shuffle($keys);
+    foreach($keys as $key) {
+        $new[$key] = $array[$key];
+    }
+    $array = $new;
+
+    return true;
+}

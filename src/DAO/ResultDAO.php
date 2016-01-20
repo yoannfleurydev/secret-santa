@@ -24,6 +24,15 @@ class ResultDAO extends DAO {
         return $results;
     }
 
+    public function setResult($result_instance_id, $result_sender_user_id, $result_recipient_user_id) {
+        $resultData = array(
+            'result_instance_id' => $result_instance_id,
+            'result_sender_user_id' => $result_sender_user_id,
+            'result_recipient_user_id' => $result_recipient_user_id
+        );
+        $this->getDb()->insert("santa_result", $resultData);
+    }
+
     protected function buildDomainObject($row) {
         $result = new Result();
 
