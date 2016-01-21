@@ -207,12 +207,18 @@ $app->get('/administration', function () use ($app) {
 
     $users = $app['dao.user']->findAll();
     $instances = $app['dao.instance']->findAll();
+    $drawIsDone = array();
+
+    foreach($instances as $instance) {
+        $drawIsDone[] = $app['dao.result']->resultInstanceIdExist($instance->getInstanceId());
+    }
 
     return $app['twig']->render(
         'administration.html.twig',
         array(
             'users' => $users,
-            'instances'=> $instances
+            'instances'=> $instances,
+            'drawIsDone' => $drawIsDone
         )
     );
 })->bind('administration');

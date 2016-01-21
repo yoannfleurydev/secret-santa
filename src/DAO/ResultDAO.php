@@ -33,6 +33,13 @@ class ResultDAO extends DAO {
         $this->getDb()->insert("santa_result", $resultData);
     }
 
+    public function resultInstanceIdExist($instance_id) {
+        $sql = "SELECT * FROM santa_result WHERE result_instance_id=?";
+        $row = $this->getDb()->fetchAssoc($sql, array($instance_id));
+
+        return !($row == null);
+    }
+
     protected function buildDomainObject($row) {
         $result = new Result();
 

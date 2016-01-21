@@ -30,9 +30,9 @@
                             </td>
                             <td>
                                 <button class="btn btn-danger btn-block" title="Supprimer l'utilisateur"
-                                   data-toggle="modal" data-target="#modal-confirmation"
-                                   data-user_login="{{ user.getUserLogin }}"
-                                   data-delete_user_path="{{ path('delete_user', {id: user.userId}) }}">
+                                        data-toggle="modal" data-target="#modal-confirmation"
+                                        data-user_login="{{ user.getUserLogin }}"
+                                        data-delete_user_path="{{ path('delete_user', {id: user.userId}) }}">
                                     <span class="glyphicon glyphicon-trash"></span>
                                 </button>
                             </td>
@@ -52,6 +52,7 @@
                         <th>Année</th>
                         <th>Nom</th>
                         <th>Hash</th>
+                        <th>Tirage</th>
                     </tr>
                     {% for instance in instances %}
                         <tr>
@@ -59,6 +60,19 @@
                             <td>{{ instance.getInstanceYear }}</td>
                             <td>{{ instance.getInstanceName }}</td>
                             <td>{{ instance.getInstanceHash }}</td>
+                            {% if drawIsDone[loop.index0] == true %}
+                                <td><a class="btn btn-block btn-primary disabled"
+                                       href="{{ path('instance_run', {instance_id: instance.getInstanceId}) }}">
+                                        <span class="glyphicon glyphicon-transfer"></span>
+                                    </a>
+                                </td>
+                            {% else %}
+                                <td><a class="btn btn-block btn-primary"
+                                       href="{{ path('instance_run', {instance_id: instance.getInstanceId}) }}">
+                                        <span class="glyphicon glyphicon-transfer"></span>
+                                    </a>
+                                </td>
+                            {% endif %}
                         </tr>
                     {% endfor %}
                 </table>
@@ -80,7 +94,8 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="myModalLabel">Suppression</h4>
                 </div>
                 <div class="modal-body">
@@ -96,7 +111,9 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-                    <button type="button" class="btn btn-primary" id="modal-confirmation-confirmation-button">Confirmer</button>
+                    <button type="button" class="btn btn-primary" id="modal-confirmation-confirmation-button">
+                        Confirmer
+                    </button>
                 </div>
             </div>
         </div>
