@@ -21,38 +21,51 @@
             <tr>
                 <th>#</th>
                 <th>Nom</th>
-                <th colspan="2">Participation</th>
+                <th>Participation</th>
             </tr>
             {% for participation in participations %}
+                {% set instance = instances[participation.participationInstanceId] %}
                 <tr>
-                    <td>{{ attribute(instances, participation.participationInstanceId).instanceId }}</td>
-                    <td>{{ attribute(instances, participation.participationInstanceId).instanceName | capitalize }}</td>
-                    {% if participation.participationResult == 0 %}
-                        <td>
-                            <a href="{{ path('instance_join_userId_participationId_participationResult', {user_id: user.userId, participation_id: participation.participationId, participation_result: 1}) }}"
-                               class="btn btn-block btn-success">
-                                <span class="glyphicon glyphicon-ok"></span>
-                            </a>
-                        </td>
-                        <td>
-                            <a href="{{ path('instance_join_userId_participationId_participationResult', {user_id: user.userId, participation_id: participation.participationId, participation_result: 0}) }}"
-                               class="btn btn-block btn-danger disabled">
-                                <span class="glyphicon glyphicon-remove"></span>
-                            </a>
-                        </td>
+                    <td>{{ instance.instanceId }}</td>
+                    <td>{{ instance.instanceName | capitalize }}</td>
+                    {% if drawIsDone[instance.instanceId] %}
+                        {% for result in results %}
+                            {% if result.resultInstanceId == instance.instanceId and result.resultSenderUserId == user.userId %}
+                                <td>{{ users[result.resultRecipientUserId].getUserLogin }}</td>
+                            {% endif %}
+                        {% endfor %}
                     {% else %}
-                        <td>
-                            <a href="{{ path('instance_join_userId_participationId_participationResult', {user_id: user.userId, participation_id: participation.participationId, participation_result: 1}) }}"
-                               class="btn btn-block btn-success disabled">
-                                <span class="glyphicon glyphicon-ok"></span>
-                            </a>
-                        </td>
-                        <td>
-                            <a href="{{ path('instance_join_userId_participationId_participationResult', {user_id: user.userId, participation_id: participation.participationId, participation_result: 0 }) }}"
-                               class="btn btn-block btn-danger">
-                                <span class="glyphicon glyphicon-remove"></span>
-                            </a>
-                        </td>
+                        {% if participation.participationResult == 0 %}
+                            <td>
+                                <div class="col-sm-6">
+                                    <a href="{{ path('instance_join_userId_participationId_participationResult', {user_id: user.userId, participation_id: participation.participationId, participation_result: 1}) }}"
+                                       class="btn btn-block btn-success">
+                                        <span class="glyphicon glyphicon-ok"></span>
+                                    </a>
+                                </div>
+                                <div class="col-sm-6">
+                                    <a href="{{ path('instance_join_userId_participationId_participationResult', {user_id: user.userId, participation_id: participation.participationId, participation_result: 0}) }}"
+                                       class="btn btn-block btn-danger disabled">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </a>
+                                </div>
+                            </td>
+                        {% else %}
+                            <td>
+                                <div class="col-sm-6">
+                                    <a href="{{ path('instance_join_userId_participationId_participationResult', {user_id: user.userId, participation_id: participation.participationId, participation_result: 1}) }}"
+                                       class="btn btn-block btn-success disabled">
+                                        <span class="glyphicon glyphicon-ok"></span>
+                                    </a>
+                                </div>
+                                <div class="col-sm-6">
+                                    <a href="{{ path('instance_join_userId_participationId_participationResult', {user_id: user.userId, participation_id: participation.participationId, participation_result: 0 }) }}"
+                                       class="btn btn-block btn-danger">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </a>
+                                </div>
+                            </td>
+                        {% endif %}
                     {% endif %}
                 </tr>
             {% endfor %}

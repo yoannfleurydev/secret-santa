@@ -34,12 +34,23 @@ $app->get('/user/{id}', function ($id) use ($app) {
 
     $participations = $app['dao.participation']->findParticipationsUserId($user->getUserId());
     $instances = $app['dao.instance']->findAll();
+    $results = $app['dao.result']->findAll();
+    $users = $app['dao.user']->findAll();
 
-    return $app['twig']->render('user.html.twig',
+    $drawIsDone = array();
+    foreach($instances as $instance) {
+        $drawIsDone[$instance->getInstanceId()] = $app['dao.result']->resultInstanceIdExist($instance->getInstanceId());
+    }
+
+    return $app['twig']->render(
+        'user.html.twig',
         array(
             'user' => $user,
             'participations' => $participations,
-            'instances' => $instances
+            'instances'=> $instances,
+            'drawIsDone' => $drawIsDone,
+            'users' => $users,
+            'results' => $results
         )
     );
 })->bind('user')->assert('id', '\d+');
