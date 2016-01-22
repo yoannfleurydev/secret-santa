@@ -25,7 +25,7 @@
             </tr>
             {% for participation in participations %}
                 <tr>
-                    <td>{{ participation.participationId }}</td>
+                    <td>{{ attribute(instances, participation.participationInstanceId).instanceId }}</td>
                     <td>{{ attribute(instances, participation.participationInstanceId).instanceName | capitalize }}</td>
                     {% if participation.participationResult == 0 %}
                         <td>
