@@ -75,22 +75,11 @@ $app->post('/login', function (Request $request) use ($app) {
 })->bind('login_post');
 
 $app->post('/administration/new/instance', function(Request $request) use ($app) {
-    if (null === $user = $app['session']->get('user')) {
+    if (!$app['function.connectedUserIsAdmin']) {
         $app['session']->getFlashBag()->add(
             'message',
             array(
-                'type' => 'danger',
-                'content' => 'Vous n\'avez pas les droits d\'accès suffisant pour accéder à cette partie'
-            )
-        );
-        return $app->redirect($app['url_generator']->generate('login_get'));
-    }
-
-    if ($user->getUserAccess() !== 'ADMIN') {
-        $app['session']->getFlashBag()->add(
-            'message',
-            array(
-                'type' => 'danger',
+                'type' => 'warning',
                 'content' => 'Vous n\'avez pas les droits d\'accès suffisant pour accéder à cette partie'
             )
         );

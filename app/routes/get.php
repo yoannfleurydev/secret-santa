@@ -61,7 +61,7 @@ $app->get('/logout', function () use ($app) {
     $app['session']->getFlashBag()->add('message',
         array(
             'type' => 'success',
-            'content' => 'Vous êtes déconnecté'
+            'content' => 'Vous êtes maintenant déconnecté'
         )
     );
 
@@ -82,7 +82,8 @@ $app->get('/instance/join/{user_id}/{participation_id}/{participation_result}',
         }
 
         if ($app['session']->get('user')->getUserId() !== $user_id) {
-            $app['session']->getFlashBag()->add('message', array('type' => 'danger', 'content' => 'Cette opération ne vous est pas permise'));
+            $app['session']->getFlashBag()->add('message', array('type' => 'warning', 'content' => 'Cette opération ne
+            vous est pas permise'));
             return $app->redirect($app['url_generator']->generate('login_get'));
         }
 
@@ -95,22 +96,11 @@ $app->get('/instance/join/{user_id}/{participation_id}/{participation_result}',
     ->assert('participation_result','[0|1]');
 
 $app->get('/administration/delete/user/{id}', function($id) use ($app) {
-    if (null === $user = $app['session']->get('user')) {
+    if (!$app['function.connectedUserIsAdmin']) {
         $app['session']->getFlashBag()->add(
             'message',
             array(
-                'type' => 'danger',
-                'content' => 'Vous n\'avez pas les droits d\'accès suffisant pour accéder à cette partie'
-            )
-        );
-        return $app->redirect($app['url_generator']->generate('login_get'));
-    }
-
-    if ($user->getUserAccess() !== 'ADMIN') {
-        $app['session']->getFlashBag()->add(
-            'message',
-            array(
-                'type' => 'danger',
+                'type' => 'warning',
                 'content' => 'Vous n\'avez pas les droits d\'accès suffisant pour accéder à cette partie'
             )
         );
@@ -132,22 +122,11 @@ $app->get('/administration/delete/user/{id}', function($id) use ($app) {
 })->bind('delete_user')->assert('id', '\d+');
 
 $app->get('/instance/run/{instance_id}', function ($instance_id) use ($app) {
-    if (null === $user = $app['session']->get('user')) {
+    if (!$app['function.connectedUserIsAdmin']) {
         $app['session']->getFlashBag()->add(
             'message',
             array(
-                'type' => 'danger',
-                'content' => 'Vous n\'avez pas les droits d\'accès suffisant pour accéder à cette partie'
-            )
-        );
-        return $app->redirect($app['url_generator']->generate('login_get'));
-    }
-
-    if ($user->getUserAccess() !== 'ADMIN') {
-        $app['session']->getFlashBag()->add(
-            'message',
-            array(
-                'type' => 'danger',
+                'type' => 'warning',
                 'content' => 'Vous n\'avez pas les droits d\'accès suffisant pour accéder à cette partie'
             )
         );
@@ -194,22 +173,11 @@ $app->get('/instance/run/{instance_id}', function ($instance_id) use ($app) {
 })->bind('instance_run')->assert('instance_id', '\d+');
 
 $app->get('/administration', function () use ($app) {
-    if (null === $user = $app['session']->get('user')) {
+    if (!$app['function.connectedUserIsAdmin']) {
         $app['session']->getFlashBag()->add(
             'message',
             array(
-                'type' => 'danger',
-                'content' => 'Vous n\'avez pas les droits d\'accès suffisant pour accéder à cette partie'
-            )
-        );
-        return $app->redirect($app['url_generator']->generate('login_get'));
-    }
-
-    if ($user->getUserAccess() !== 'ADMIN') {
-        $app['session']->getFlashBag()->add(
-            'message',
-            array(
-                'type' => 'danger',
+                'type' => 'warning',
                 'content' => 'Vous n\'avez pas les droits d\'accès suffisant pour accéder à cette partie'
             )
         );

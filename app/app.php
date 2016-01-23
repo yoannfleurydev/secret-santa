@@ -20,3 +20,7 @@ $app['dao.participation'] = $app->share(function ($app) {
 $app['dao.result'] = $app->share(function ($app) {
     return new SecretSanta\DAO\ResultDAO($app['db']);
 });
+
+$app['function.connectedUserIsAdmin'] = function() use ($app) {
+    return $app['session']->get('user') !== null && $app['session']->get('user')->getUserAccess() === 'ADMIN';
+};
