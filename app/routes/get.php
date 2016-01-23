@@ -55,6 +55,21 @@ $app->get('/user/{id}', function ($id) use ($app) {
     );
 })->bind('user')->assert('id', '\d+');
 
+$app->get('/modify/user/{id}', function() use ($app) {
+    if (!$app['function.connectedUserIsAdmin'] || null === $user = $app['session']->get('user')) {
+        $app['session']->getFlashBag()->add(
+            'message',
+            array(
+                'type' => 'warning',
+                'content' => 'Vous n\'avez pas les droits d\'accès suffisant pour accéder à cette partie'
+            )
+        );
+        return $app->redirect($app['url_generator']->generate('login_get'));
+    }
+
+    return $app['twig']->render('modify_user.html.twig', array('user' => $user));
+})->bind('modify_user_id')->assert('id', '\d+');
+
 $app->get('/logout', function () use ($app) {
     $app['session']->clear();
 
