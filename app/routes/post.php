@@ -27,11 +27,11 @@ $app->post('/signup', function (Request $request) use ($app) {
     }
 
     $app['dao.user']->setUser(
-        $request->request->get('user_login'),
+        htmlspecialchars($request->request->get('user_login')),
         $request->request->get('user_password'),
-        $request->request->get('user_firstname'),
-        $request->request->get('user_lastname'),
-        $request->request->get('user_email')
+        htmlspecialchars($request->request->get('user_firstname')),
+        htmlspecialchars($request->request->get('user_lastname')),
+        htmlspecialchars($request->request->get('user_email'))
     );
 
     $user = $app['dao.user']->findByUserLogin($request->request->get('user_login'));

@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Yoann
- * Date: 15/01/2016
- * Time: 21:44
- */
 
 namespace SecretSanta\DAO;
 
@@ -21,5 +15,9 @@ abstract class DAO {
         return $this->db;
     }
 
+    /**
+     * @param $row The row of a table, containing the data.
+     * @return mixed A POPO with the data from database.
+     */
     protected abstract function buildDomainObject($row);
 }

@@ -6,7 +6,6 @@ namespace SecretSanta\DAO;
 use SecretSanta\POPO\Instance;
 
 class InstanceDAO extends DAO {
-
     public function find($instance_id) {
         $sql = "SELECT * FROM santa_instance WHERE instance_id=?";
         $row = $this->getDb()->fetchAssoc($sql, array($instance_id));
@@ -43,7 +42,7 @@ class InstanceDAO extends DAO {
     }
 
     public function instanceNameExist($instance_name) {
-        $name = htmlspecialchars($instance_name);
+        $name = $instance_name;
         $sql = "SELECT * FROM santa_instance WHERE instance_name=?";
         $row = $this->getDb()->fetchAssoc($sql, array($name));
 

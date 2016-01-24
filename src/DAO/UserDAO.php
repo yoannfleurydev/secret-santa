@@ -35,10 +35,10 @@ class UserDAO extends DAO {
 
     public function setUser($user_login, $user_password, $user_firstname, $user_lastname,
                             $user_email, $user_access = "USER") {
-        $login = htmlspecialchars($user_login);
-        $email = htmlspecialchars($user_email);
-        $firstname = htmlspecialchars($user_firstname);
-        $lastname = htmlspecialchars($user_lastname);
+        $login = $user_login;
+        $email = $user_email;
+        $firstname = $user_firstname;
+        $lastname = $user_lastname;
 
         $pass = password_hash($user_password, PASSWORD_BCRYPT, array('cost' => $this->COST));
         $userData = array(
