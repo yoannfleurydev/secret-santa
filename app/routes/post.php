@@ -1,7 +1,6 @@
 <?php
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Cookie;
 
 $app->post('/signup', function (Request $request) use ($app) {
     if (strlen($request->request->get('user_login')) < 3) {
