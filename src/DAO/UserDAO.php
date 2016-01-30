@@ -41,6 +41,7 @@ class UserDAO extends DAO {
         $lastname = $user_lastname;
 
         $pass = password_hash($user_password, PASSWORD_BCRYPT, array('cost' => $this->COST));
+
         $userData = array(
             'user_login' => $login,
             'user_password' => $pass,
@@ -59,6 +60,20 @@ class UserDAO extends DAO {
     public function updatePassword($user_password, $user_id) {
         $pass = password_hash($user_password, PASSWORD_BCRYPT, array('cost' => $this->COST));
         $this->getDb()->update("santa_user", array('user_password' => $pass), array('user_id' => $user_id));
+    }
+
+    public function updateUser($user_id, $user_password, $user_firstname, $user_lastname,
+                               $user_email, $user_access = "USER") {
+        $this->updatePassword($user_password, $user_id);
+        $this->getDb()->update("santa_user",
+            array(
+                'user_firstname' => $user_firstname,
+                'user_lastname' => $user_lastname,
+                'user_email' => $user_email,
+                'user_access' => $user_access
+            ),
+            array('user_id' => $user_id)
+        );
     }
 
     public function userLoginExist($user_login) {

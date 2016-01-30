@@ -56,7 +56,18 @@ $app->get('/user/{id}', function ($id) use ($app) {
 })->bind('user')->assert('id', '\d+');
 
 $app->get('/modify/user/{id}', function() use ($app) {
-    if (!$app['function.connectedUserIsAdmin'] || null === $user = $app['session']->get('user')) {
+    if (null === $user = $app['session']->get('user')) {
+        $app['session']->getFlashBag()->add(
+            'message',
+            array(
+                'type' => 'warning',
+                'content' => 'Vous n\'avez pas les droits d\'accès suffisant pour accéder à cette partie'
+            )
+        );
+        return $app->redirect($app['url_generator']->generate('login_get'));
+    }
+
+    if ($user->getUserId() !== $app['session']->get('user')->getUserId()) {
         $app['session']->getFlashBag()->add(
             'message',
             array(

@@ -64,8 +64,8 @@ body {
     height: 290px;
     background: #a0d5d3;
     position: fixed;
-    bottom: 0;
-    right: 0%;
+    bottom: 3%;
+    right: 3%;
     border-radius: 100%;
     margin-top: 60px;
     border: 10px solid #f8e7dc;
