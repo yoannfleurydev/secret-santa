@@ -62,9 +62,8 @@ class UserDAO extends DAO {
         $this->getDb()->update("santa_user", array('user_password' => $pass), array('user_id' => $user_id));
     }
 
-    public function updateUser($user_id, $user_password, $user_firstname, $user_lastname,
+    public function updateUser($user_id, $user_firstname, $user_lastname,
                                $user_email, $user_access = "USER") {
-        $this->updatePassword($user_password, $user_id);
         $this->getDb()->update("santa_user",
             array(
                 'user_firstname' => $user_firstname,

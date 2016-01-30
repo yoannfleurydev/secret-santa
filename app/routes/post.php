@@ -165,31 +165,35 @@ $app->post('/modify/user', function(Request $request) use ($app) {
         return $app->redirect($app['url_generator']->generate('login_get'));
     }
 
-    if (strlen($request->request->get('user_password')) < 4) {
-        $app['session']->getFlashBag()->add('message',
-            array(
-                'type' => 'danger',
-                'content' => 'Votre mot de passe doit avoir une longueur minimale de 5 caractères. Nous vous
-                    conseillons l\'utilisation d\'un mot de passe composé de lettres, majuscules et miniscules ainsi que
-                    de caractères numériques et de symboles.'
-            )
-        );
-        return $app->redirect($app['url_generator']->generate('modify_user_id', array('id' => $user->getUserId())));
-    }
+    if (strlen($request->request->get('user_password')) != 0 && strlen($request->request->get
+        ('user_password_verification')) != 0) {
+        if (strlen($request->request->get('user_password')) < 4) {
+            $app['session']->getFlashBag()->add('message',
+                array(
+                    'type' => 'danger',
+                    'content' => 'Votre mot de passe doit avoir une longueur minimale de 5 caractères. Nous vous
+                conseillons l\'utilisation d\'un mot de passe composé de lettres, majuscules et miniscules ainsi que
+                de caractères numériques et de symboles.'
+                )
+            );
+            return $app->redirect($app['url_generator']->generate('modify_user_id', array('id' => $user->getUserId())));
+        }
 
-    if ($request->request->get('user_password') !== $request->request->get('user_password_verification')) {
-        $app['session']->getFlashBag()->add('message',
-            array(
-                'type' => 'danger',
-                'content' => 'Les deux mots de passe ne correspondent pas.'
-            )
-        );
-        return $app->redirect($app['url_generator']->generate('modify_user_id', array('id' => $user->getUserId())));
+        if ($request->request->get('user_password') !== $request->request->get('user_password_verification')) {
+            $app['session']->getFlashBag()->add('message',
+                array(
+                    'type' => 'danger',
+                    'content' => 'Les deux mots de passe ne correspondent pas.'
+                )
+            );
+            return $app->redirect($app['url_generator']->generate('modify_user_id', array('id' => $user->getUserId())));
+        }
+
+        $app['dao.user']->updatePassword($request->request->get('user_password'), $user->getUserId());
     }
 
     $app['dao.user']->updateUser(
         $user->getUserId(),
-        $request->request->get('user_password'),
         htmlspecialchars($request->request->get('user_firstname')),
         htmlspecialchars($request->request->get('user_lastname')),
         htmlspecialchars($request->request->get('user_email'))
