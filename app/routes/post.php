@@ -126,7 +126,20 @@ $app->post('/instance/join', function(Request $request) use ($app) {
     }
 
     $instance_hash = $request->get('instance_hash');
-    $instance = $app['dao.instance']->findInstanceHash($instance_hash);
+
+    try {
+        $instance = $app['dao.instance']->findInstanceHash($instance_hash);
+    } catch (Exception $e) {
+        $app['session']->getFlashBag()->add(
+            'message',
+            array(
+                'type' => 'danger',
+                'content' => 'Cette instance n\'existe pas.'
+            )
+        );
+        return $app->redirect($app['url_generator']->generate('index'));
+    }
+
     $instance_id = $instance->getInstanceId();
     $user_id = $user->getUserId();
 
@@ -196,7 +209,8 @@ $app->post('/modify/user', function(Request $request) use ($app) {
         $user->getUserId(),
         htmlspecialchars($request->request->get('user_firstname')),
         htmlspecialchars($request->request->get('user_lastname')),
-        htmlspecialchars($request->request->get('user_email'))
+        htmlspecialchars($request->request->get('user_email')),
+        $user->getUserAccess()
     );
 
     $user = $app['dao.user']->findByUserLogin($app['session']->get('user')->getUserLogin());
