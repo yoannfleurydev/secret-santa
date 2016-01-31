@@ -16,3 +16,5 @@ $('#modal-confirmation').on('show.bs.modal', function (event) {
         window.location.assign(delete_user_path);
     });
 });
+
+$("input.hash_focus").on('focus', function() { $(this).select(); });

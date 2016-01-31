@@ -59,7 +59,7 @@
                             <td>{{ instance.getInstanceId }}</td>
                             <td>{{ instance.getInstanceYear }}</td>
                             <td>{{ instance.getInstanceName }}</td>
-                            <td>{{ instance.getInstanceHash }}</td>
+                            <td><input class="hash_focus" value="{{ instance.getInstanceHash }}" /></td>
                             {% if drawIsDone[loop.index0] == true %}
                                 <td><a class="btn btn-block btn-primary disabled"
                                        href="{{ path('instance_run', {instance_id: instance.getInstanceId}) }}">
