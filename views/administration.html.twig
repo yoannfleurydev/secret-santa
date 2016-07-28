@@ -7,38 +7,40 @@
                 <div class="panel-heading">
                     <h3 class="panel-title">Utilisateurs</h3>
                 </div>
-                <table class="table table-hover table-striped">
-                    <tr>
-                        <th>#</th>
-                        <th>Prénom</th>
-                        <th>Nom</th>
-                        <th>Nom d'utilisateur</th>
-                        <th>Modifier</th>
-                        <th>Supprimer</th>
-                    </tr>
-                    {% for user in users %}
-                        <tr>
-                            <td>{{ user.getUserId }}</td>
-                            <td>{{ user.getUserFirstname }}</td>
-                            <td>{{ user.getUserLastname }}</td>
-                            <td>{{ user.getUserLogin }}</td>
-                            <td>
-                                <a href="{#{ path('edit_user', {id: user.userId}) }#}" class="btn btn-primary btn-block"
-                                   title="Modifier l'utilisateur">
-                                    <span class="glyphicon glyphicon-edit"></span>
-                                </a>
-                            </td>
-                            <td>
-                                <button class="btn btn-danger btn-block" title="Supprimer l'utilisateur"
-                                        data-toggle="modal" data-target="#modal-confirmation"
-                                        data-user_login="{{ user.getUserLogin }}"
-                                        data-delete_user_path="{{ path('delete_user', {id: user.userId}) }}">
-                                    <span class="glyphicon glyphicon-trash"></span>
-                                </button>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </table>
+				<div class="table-responsive">
+					<table class="table table-hover table-striped">
+						<tr>
+							<th>#</th>
+							<th>Prénom</th>
+							<th>Nom</th>
+							<th>Nom d'utilisateur</th>
+							<th>Modifier</th>
+							<th>Supprimer</th>
+						</tr>
+						{% for user in users %}
+							<tr>
+								<td>{{ user.getUserId }}</td>
+								<td>{{ user.getUserFirstname }}</td>
+								<td>{{ user.getUserLastname }}</td>
+								<td>{{ user.getUserLogin }}</td>
+								<td>
+									<a href="{#{ path('edit_user', {id: user.userId}) }#}" class="btn btn-primary btn-block"
+									   title="Modifier l'utilisateur">
+										<span class="glyphicon glyphicon-edit"></span>
+									</a>
+								</td>
+								<td>
+									<button class="btn btn-danger btn-block" title="Supprimer l'utilisateur"
+											data-toggle="modal" data-target="#modal-confirmation"
+											data-user_login="{{ user.getUserLogin }}"
+											data-delete_user_path="{{ path('delete_user', {id: user.userId}) }}">
+										<span class="glyphicon glyphicon-trash"></span>
+									</button>
+								</td>
+							</tr>
+						{% endfor %}
+					</table>
+				</div>
             </div>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -46,36 +48,38 @@
                 <div class="panel-heading">
                     <h3 class="panel-title">Instances Secret Santa</h3>
                 </div>
-                <table class="table table-hover table-striped">
-                    <tr>
-                        <th>#</th>
-                        <th>Année</th>
-                        <th>Nom</th>
-                        <th>Hash</th>
-                        <th>Tirage</th>
-                    </tr>
-                    {% for instance in instances %}
-                        <tr>
-                            <td>{{ instance.getInstanceId }}</td>
-                            <td>{{ instance.getInstanceYear }}</td>
-                            <td>{{ instance.getInstanceName }}</td>
-                            <td><input class="hash_focus" value="{{ instance.getInstanceHash }}" /></td>
-                            {% if drawIsDone[loop.index0] == true %}
-                                <td><a class="btn btn-block btn-primary disabled"
-                                       href="{{ path('instance_run', {instance_id: instance.getInstanceId}) }}">
-                                        <span class="glyphicon glyphicon-transfer"></span>
-                                    </a>
-                                </td>
-                            {% else %}
-                                <td><a class="btn btn-block btn-primary"
-                                       href="{{ path('instance_run', {instance_id: instance.getInstanceId}) }}">
-                                        <span class="glyphicon glyphicon-transfer"></span>
-                                    </a>
-                                </td>
-                            {% endif %}
-                        </tr>
-                    {% endfor %}
-                </table>
+				<div class="table-responsive">
+					<table class="table table-hover table-striped">
+						<tr>
+							<th>#</th>
+							<th>Année</th>
+							<th>Nom</th>
+							<th>Hash</th>
+							<th>Tirage</th>
+						</tr>
+						{% for instance in instances %}
+							<tr>
+								<td>{{ instance.getInstanceId }}</td>
+								<td>{{ instance.getInstanceYear }}</td>
+								<td>{{ instance.getInstanceName }}</td>
+								<td>{{ instance.getInstanceHash }}</td>
+								{% if drawIsDone[loop.index0] == true %}
+									<td><a class="btn btn-block btn-primary disabled"
+										   href="{{ path('instance_run', {instance_id: instance.getInstanceId}) }}">
+											<span class="glyphicon glyphicon-transfer"></span>
+										</a>
+									</td>
+								{% else %}
+									<td><a class="btn btn-block btn-primary"
+										   href="{{ path('instance_run', {instance_id: instance.getInstanceId}) }}">
+											<span class="glyphicon glyphicon-transfer"></span>
+										</a>
+									</td>
+								{% endif %}
+							</tr>
+						{% endfor %}
+					</table>
+				</div>
                 <div class="panel-body">
                     <form method="post" action="{{ path('administration_new_instance_post') }}">
                         <div class="form-group">
