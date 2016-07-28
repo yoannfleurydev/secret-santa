@@ -5,7 +5,7 @@ $app['db.options'] = array(
     'charset' => 'utf8',
     'host' => 'localhost',
     'port' => '3306',
-    'dbname' => 'miniquiz',
+    'dbname' => 'secret_santa',
     'user' => 'root',
     'password' => '',
 );

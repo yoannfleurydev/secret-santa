@@ -86,7 +86,19 @@ $app->post('/administration/new/instance', function(Request $request) use ($app)
     }
 
     $instance_year = date('Y');
-    $instance_name = htmlspecialchars($request->request->get('instance_name'));
+
+    if (strlen($request->request->get('instance_name')) <= 3) {
+        $app['session']->getFlashBag()->add(
+            'message',
+            array(
+                'type' => 'warning',
+                'content' => 'Le nom de l\'instance doit faire plus de 3 caractères' 
+            )
+        );
+        return $app->redirect($app['url_generator']->generate('administration'));
+    } else {
+        $instance_name = htmlspecialchars($request->request->get('instance_name'));
+    }
 
     if ($app['dao.instance']->instanceNameExist($instance_name)) {
         $app['session']->getFlashBag()->add(
