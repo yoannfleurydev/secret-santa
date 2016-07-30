@@ -89,6 +89,10 @@ class UserDAO extends DAO {
         return password_verify($password, $row['user_password']);
     }
 
+    public function getNbUsers() {
+        return count($this->findAll());
+    }
+
     protected function buildDomainObject($row) {
         $user = new User();
 

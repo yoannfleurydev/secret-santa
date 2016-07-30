@@ -4,14 +4,20 @@ use Symfony\Component\HttpFoundation\Request;
 
 $app->post('/signup', function (Request $request) use ($app) {
     if (strlen($request->request->get('user_login')) < 3) {
-        $app['session']->getFlashBag()->add('message', array('type' => 'danger', 'content' => 'Votre identifiant de connexion doit avoir une longueur minimale de 3 caractères.'));
+        $app['session']->getFlashBag()->add('message', array(
+            'type' => 'danger', 
+            'content' => 'Votre identifiant de connexion doit avoir une longueur minimale de 3 caractères.'
+        ));
         return $app->redirect($app['url_generator']->generate('signup_get'));
     }
 
     if (strlen($request->request->get('user_password')) < 4) {
-        $app['session']->getFlashBag()->add('message', array('type' => 'danger', 'content' => 'Votre mot de passe doit avoir une longueur minimale de 5 caractères. Nous vous
+        $app['session']->getFlashBag()->add('message', array(
+            'type' => 'danger', 
+            'content' => 'Votre mot de passe doit avoir une longueur minimale de 5 caractères. Nous vous
                 conseillons l\'utilisation d\'un mot de passe composé de lettres, majuscules et miniscules ainsi que
-                de caractères numériques et de symboles.'));
+                de caractères numériques et de symboles.'
+        ));
         return $app->redirect($app['url_generator']->generate('signup_get'));
     }
 
@@ -25,12 +31,16 @@ $app->post('/signup', function (Request $request) use ($app) {
         return $app->redirect($app['url_generator']->generate('signup_get'));
     }
 
+    // If the creation of the user is the first one, this user is an admin
+    $userAccess = ($app['dao.user']->getNbUsers() === 0) ? "ADMIN" : "USER";
+
     $app['dao.user']->setUser(
         htmlspecialchars($request->request->get('user_login')),
         $request->request->get('user_password'),
         htmlspecialchars($request->request->get('user_firstname')),
         htmlspecialchars($request->request->get('user_lastname')),
-        htmlspecialchars($request->request->get('user_email'))
+        htmlspecialchars($request->request->get('user_email')),
+        $userAccess
     );
 
     $user = $app['dao.user']->findByUserLogin($request->request->get('user_login'));
