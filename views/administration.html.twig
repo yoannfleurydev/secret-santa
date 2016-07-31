@@ -24,7 +24,7 @@
 								<td>{{ user.getUserLastname }}</td>
 								<td>{{ user.getUserLogin }}</td>
 								<td>
-									<a href="{#{ path('edit_user', {id: user.userId}) }#}" class="btn btn-primary btn-block"
+									<a href="{{ path('edit_user_id', {id: user.userId}) }}" class="btn btn-primary btn-block"
 									   title="Modifier l'utilisateur">
 										<span class="glyphicon glyphicon-edit"></span>
 									</a>

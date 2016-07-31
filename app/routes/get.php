@@ -52,7 +52,7 @@ $app->get('/user/{id}', function ($id) use ($app) {
     );
 })->bind('user')->assert('id', '\d+');
 
-$app->get('/modify/user/{id}', function() use ($app) {
+$app->get('/edit/user/{id}', function($id) use ($app) {
     if (null === $user = $app['session']->get('user')) {
         $app['session']->getFlashBag()->add(
             'message',
@@ -64,7 +64,13 @@ $app->get('/modify/user/{id}', function() use ($app) {
         return $app->redirect($app['url_generator']->generate('login_get'));
     }
 
-    if ($user->getUserId() !== $app['session']->get('user')->getUserId()) {
+    if ($app['function.connectedUserIsAdmin']) {
+        $user = $app['dao.user']->find($id);
+
+        return $app['twig']->render('modify_user.html.twig', array('user' => $user));
+    }
+
+    if ($id !== $app['session']->get('user')->getUserId()) {
         $app['session']->getFlashBag()->add(
             'message',
             array(
@@ -76,7 +82,7 @@ $app->get('/modify/user/{id}', function() use ($app) {
     }
 
     return $app['twig']->render('modify_user.html.twig', array('user' => $user));
-})->bind('modify_user_id')->assert('id', '\d+');
+})->bind('edit_user_id')->assert('id', '\d+');
 
 $app->get('/logout', function () use ($app) {
     $app['session']->clear();

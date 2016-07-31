@@ -187,7 +187,8 @@ $app->post('/instance/join', function(Request $request) use ($app) {
     return $app->redirect($app['url_generator']->generate('index'));
 })->bind('instance_join');
 
-$app->post('/modify/user', function(Request $request) use ($app) {
+$app->post('/modify/user/{id}', function(Request $request, $id) use ($app) {
+    // If the user is not connected, then there is a redirection with a message
     if (null === $user = $app['session']->get('user')) {
         $app['session']->getFlashBag()->add(
             'message',
@@ -199,6 +200,10 @@ $app->post('/modify/user', function(Request $request) use ($app) {
         return $app->redirect($app['url_generator']->generate('login_get'));
     }
 
+    // If the user is an admin, we find the user with the id from the route
+    $user = $app['dao.user']->find($id);
+
+    // If the password is correctly set, then we update it
     if (strlen($request->request->get('user_password')) != 0 && strlen($request->request->get
         ('user_password_verification')) != 0) {
         if (strlen($request->request->get('user_password')) < 4) {
@@ -210,7 +215,7 @@ $app->post('/modify/user', function(Request $request) use ($app) {
                 de caractères numériques et de symboles.'
                 )
             );
-            return $app->redirect($app['url_generator']->generate('modify_user_id', array('id' => $user->getUserId())));
+            return $app->redirect($app['url_generator']->generate('edit_user_id', array('id' => $user->getUserId())));
         }
 
         if ($request->request->get('user_password') !== $request->request->get('user_password_verification')) {
@@ -220,33 +225,33 @@ $app->post('/modify/user', function(Request $request) use ($app) {
                     'content' => 'Les deux mots de passe ne correspondent pas.'
                 )
             );
-            return $app->redirect($app['url_generator']->generate('modify_user_id', array('id' => $user->getUserId())));
+            return $app->redirect($app['url_generator']->generate('edit_user_id', array('id' => $user->getUserId())));
         }
 
         $app['dao.user']->updatePassword($request->request->get('user_password'), $user->getUserId());
     }
 
-    $app['dao.user']->updateUser(
-        $user->getUserId(),
-        htmlspecialchars($request->request->get('user_firstname')),
-        htmlspecialchars($request->request->get('user_lastname')),
-        htmlspecialchars($request->request->get('user_email')),
-        $user->getUserAccess()
-    );
-
+    if ($app['function.connectedUserIsAdmin'] || $user->getUserId() === $app['session']->get('user')->getUserId()) {
+        $app['dao.user']->updateUser(
+            $user->getUserId(),
+            htmlspecialchars($request->request->get('user_firstname')),
+            htmlspecialchars($request->request->get('user_lastname')),
+            htmlspecialchars($request->request->get('user_email')),
+            $user->getUserAccess()
+        );
+    }
+    
     $user = $app['dao.user']->findByUserLogin($app['session']->get('user')->getUserLogin());
-
     $app['session']->clear();
-
 
     $app['session']->set('user', $user);
     $app['session']->set('connected', array('connected' => true));
     $app['session']->getFlashBag()->add('message',
         array(
             'type' => 'success',
-            'content' => "Vos paramètres ont bien été sauvegardés"
+            'content' => "Les paramètres ont bien été sauvegardés"
         )
     );
 
     return $app->redirect($app['url_generator']->generate('index'));
-})->bind('modify_user_post');
+})->bind('edit_user_post_id')->assert('id', '\d+');

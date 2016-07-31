@@ -1,7 +1,7 @@
 {% extends "template.html.twig" %}
 
 {% block content %}
-    <form class="form-horizontal" method="post" action="{{ path('modify_user_post') }}">
+    <form class="form-horizontal" method="post" action="{{ path('edit_user_post_id', {id: user.userId}) }}">
         <div class="form-group">
             <label for="user_firstname" class="col-sm-2 control-label">Prénom</label>
             <div class="col-sm-10">
