@@ -1,4 +1,7 @@
 {
+  "name" : "Secret Santa",
+  "description" : "Secret Santa application",
+  "type" : "project",
   "require": {
     "silex/silex": "~1.3",
     "doctrine/dbal": "2.5.*",
@@ -8,5 +11,13 @@
   },
   "autoload": {
     "psr-4": {"SecretSanta\\" : "src"}
-  }
+  },
+  "authors": [
+    {
+	    "name": "Yoann Fleury",
+	    "email": "yoann.fleury@yahoo.com",
+	    "homepage": "http://yoannfleury.eu",
+	    "role": "Developer"
+    }
+  ]
 }
