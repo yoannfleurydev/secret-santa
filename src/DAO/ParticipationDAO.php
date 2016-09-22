@@ -13,12 +13,18 @@ class ParticipationDAO extends DAO {
             throw new \Exception("Participation : No santa_participation matching id " . $id);
     }
 
-    public function findParticipationInstanceId($participation_instance_id) {
-        $sql = "SELECT * FROM santa_participation WHERE participation_instance_id=?";
-        $row = $this->getDb()->fetchAssoc($sql, array($participation_instance_id));
-        if ($row) return $this->buildDomainObject($row); else
-            throw new \Exception("Participation : No santa_participation matching participation_instance_id " .
-                $participation_instance_id);
+    public function countParticipationsInstanceId($participation_instance_id) {
+        $sql = "SELECT COUNT(*) FROM santa_participation WHERE participation_instance_id=?";
+        $count = $this->getDb()->fetchAssoc($sql, array($participation_instance_id));
+
+        return $count['COUNT(*)'];
+    }
+
+    public function countRealParticipationsInstanceId($participation_instance_id, $participation_result = 1) {
+        $sql = "SELECT COUNT(*) FROM santa_participation WHERE participation_instance_id=? AND participation_result=?";
+        $count = $this->getDb()->fetchAssoc($sql, array($participation_instance_id, $participation_result));
+
+        return $count['COUNT(*)'];
     }
 
     public function findParticipationsUserId($participation_user_id) {

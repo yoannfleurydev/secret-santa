@@ -215,6 +215,18 @@ $app->get('/administration', function () use ($app) {
 
     $users = $app['dao.user']->findAll();
     $instances = $app['dao.instance']->findAll();
+
+    $participations = [];
+    $realParticipations = [];
+    /** @var \SecretSanta\POPO\Instance $instance */
+    foreach ($instances as $instance) {
+        $participations[$instance->getInstanceId()] = $app['dao.participation']
+            ->countParticipationsInstanceId($instance->getInstanceId());
+        $realParticipations[$instance->getInstanceId()] = $app['dao.participation']
+            ->countRealParticipationsInstanceId($instance->getInstanceId());
+    }
+    
+
     $drawIsDone = array();
 
     foreach($instances as $instance) {
@@ -226,13 +238,15 @@ $app->get('/administration', function () use ($app) {
         array(
             'users' => $users,
             'instances'=> $instances,
-            'drawIsDone' => $drawIsDone
+            'drawIsDone' => $drawIsDone,
+            'participations' => $participations,
+            'realParticipations' => $realParticipations
         )
     );
 })->bind('administration');
 
 /**
- * Function tu shuffle an array with the key => value
+ * Function to shuffle an array with the key => value
  * @param $array
  * @return bool
  */
