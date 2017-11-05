@@ -33,7 +33,7 @@
                     {% if app.session.get('user').userAccess == "ADMIN" %}
                         <li>
                             <a href="{{ path('administration') }}" title="Administration">
-                                <span class="glyphicon glyphicon-cog"></span>
+                                <i class="material-icons">lock</i>
                                 Administration
                             </a>
                         </li>
@@ -41,13 +41,13 @@
                     <li>
                         <a href="{{ path('user', {'id': app.session.get("user").userId}) }}"
                            title="Mon profil">
-                            <span class="glyphicon glyphicon-user"></span>
+                            <i class="material-icons">person</i>
                             Profil
                         </a>
                     </li>
                     <li>
                         <a href="{{ path('logout') }}" title="Se déconnecter">
-                            <span class="glyphicon glyphicon-log-out"></span>
+                            <i class="material-icons">exit_to_app</i>
                             Déconnexion
                         </a>
                     </li>

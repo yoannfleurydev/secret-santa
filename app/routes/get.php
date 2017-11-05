@@ -225,7 +225,6 @@ $app->get('/administration', function () use ($app) {
         $realParticipations[$instance->getInstanceId()] = $app['dao.participation']
             ->countRealParticipationsInstanceId($instance->getInstanceId());
     }
-    
 
     $drawIsDone = array();
 

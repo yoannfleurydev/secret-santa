@@ -26,7 +26,7 @@
 								<td>
 									<a href="{{ path('edit_user_id', {id: user.userId}) }}" class="btn btn-primary btn-block"
 									   title="Modifier l'utilisateur">
-										<span class="glyphicon glyphicon-edit"></span>
+										<i class="material-icons">mode_edit</i>
 									</a>
 								</td>
 								<td>
@@ -34,7 +34,7 @@
 											data-toggle="modal" data-target="#modal-confirmation"
 											data-user_login="{{ user.getUserLogin }}"
 											data-delete_user_path="{{ path('delete_user', {id: user.userId}) }}">
-										<span class="glyphicon glyphicon-trash"></span>
+										<i class="material-icons">delete</i>
 									</button>
 								</td>
 							</tr>
@@ -68,13 +68,13 @@
 								{% if drawIsDone[loop.index0] == true %}
 									<td><a class="btn btn-block btn-primary disabled"
 										   href="{{ path('instance_run', {instance_id: instance.getInstanceId}) }}">
-											<span class="glyphicon glyphicon-transfer"></span>
+											<i class="material-icons">repeat</i>
 										</a>
 									</td>
 								{% else %}
 									<td><a class="btn btn-block btn-primary"
 										   href="{{ path('instance_run', {instance_id: instance.getInstanceId}) }}">
-											<span class="glyphicon glyphicon-transfer"></span>
+											<i class="material-icons">repeat</i>
 										</a>
 									</td>
 								{% endif %}
